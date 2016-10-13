@@ -8,12 +8,13 @@ cd $script_dir/../..
 # makedepend for OpenSSL
 sudo apt-get update
 sudo apt-get install -y xutils-dev
+sudo apt-get install unzip
 
 ####### Android NDK toolchain #######
 
 android_root=$script_dir/../../toolchains/android
 
-toolchain_destination=$android_root/$NDK_VERSION/android-$API_LEVEL/arm-linux-androideabi-clang3.6
+toolchain_destination=$android_root/$NDK_VERSION/android-$API_LEVEL/scraps-toolchain
 
 if [[ -d $toolchain_destination ]] ; then
     echo "Android NDK toolchain already present, skipping installation"
@@ -32,15 +33,14 @@ trap cleanup EXIT TERM INT
 mkdir -p temp
 (
     cd temp
-    curl -O https://dl-ssl.google.com/android/ndk/android-ndk-$NDK_VERSION-linux-x86_64.bin
-    chmod +x android-ndk-$NDK_VERSION-linux-x86_64.bin
+    echo "Downloading ndk; this may take a while..."
+    curl -O https://dl.google.com/android/repository/android-ndk-$NDK_VERSION-linux-x86_64.zip
     echo "Extracting ndk; this may take a while..."
-    ./android-ndk-$NDK_VERSION-linux-x86_64.bin -o$android_root > /dev/null
+    unzip android-ndk-$NDK_VERSION-linux-x86_64.zip -d $android_root > /dev/null
 )
 
-$android_root/android-ndk-$NDK_VERSION/build/tools/make-standalone-toolchain.sh \
+$android_root/android-ndk-$NDK_VERSION/build/tools/make_standalone_toolchain.py \
+    --arch=arm \
+    --api=$API_LEVEL \
     --stl=libc++ \
-    --platform=android-$API_LEVEL \
-    --install-dir=$toolchain_destination \
-    --toolchain=arm-linux-androideabi-clang3.6 \
-    --llvm-version=3.6
+    --install-dir=$toolchain_destination
