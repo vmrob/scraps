@@ -17,12 +17,12 @@ matrix:
           language: android
           compiler: clang
           env:
-              - NDK_VERSION=r10e
-              - API_LEVEL=17
+              - NDK_VERSION=r13
+              - API_LEVEL=18
           android:
               components:
-                  - android-22
-                  - build-tools-23.0.1
+                  - android-24
+                  - build-tools-23.0.3
           install: [ ./scripts/ci/install-android-dependencies ]
           script:  [ ./scripts/ci/build-android ]
 
