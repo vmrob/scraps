@@ -11,6 +11,10 @@ if [[ ! -d $android_toolchain ]] ; then
     exit 1
 fi
 
+cpu_count=$(nproc)
+
+./build-deps --bootstrap-b2 --needy-target-args="-t android" --needy-satisfy-args="--android-toolchain=$android_toolchain" --configure
+
 cat << PROJECT_CONFIG > project-config.jam
 using clang-linux : android : $android_toolchain/bin/arm-linux-androideabi-clang++ :
     <linkflags>-march=armv7-a
@@ -18,7 +22,4 @@ using clang-linux : android : $android_toolchain/bin/arm-linux-androideabi-clang
 ;
 PROJECT_CONFIG
 
-cpu_count=$(nproc)
-
-./build-deps --bootstrap-b2 --needy-target-args="-t android" --needy-satisfy-args="--android-toolchain=$android_toolchain" --configure
 ./b2 -j$cpu_count variant=release target-os=android scraps tests/unit

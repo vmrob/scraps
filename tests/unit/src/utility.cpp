@@ -182,14 +182,16 @@ TEST(utility, Demangle) {
 }
 
 TEST(utility, ByteFromFile) {
+    static constexpr char data[] = "blah blah test blah";
+
     char path[] = "tempfile-XXXXXX";
     int fd = mkstemp(path);
-    dprintf(fd, "test");
+    write(fd, data, sizeof(data));
     close(fd);
     auto _ = gsl::finally([&] { unlink(path); });
 
     auto bytes = BytesFromFile(path);
     ASSERT_TRUE(bytes);
-    EXPECT_EQ(bytes->size(), 4);
-    EXPECT_EQ(memcmp(bytes->data(), "test", std::min<size_t>(bytes->size(), 4)), 0);
+    EXPECT_EQ(bytes->size(), sizeof(data));
+    EXPECT_EQ(memcmp(bytes->data(), data, std::min<size_t>(bytes->size(), sizeof(data))), 0);
 }
