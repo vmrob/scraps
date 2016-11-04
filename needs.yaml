@@ -35,7 +35,7 @@ libraries:
         download: https://tls.mbed.org/download/mbedtls-2.4.0-apache.tgz
         checksum: 20fe40f9f831ca63839967178e3db5aaf77705d3
         project:
-            build-steps: make -j{build_concurrency} install DESTDIR={build_directory}
+            build-steps: make -j{build_concurrency} install APPS= DESTDIR={build_directory}
             post-build: xxd -i LICENSE {build_directory}/include/mbedtls/license.c
     curl:
         download: https://curl.haxx.se/download/curl-7.50.3.tar.gz
