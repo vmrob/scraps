@@ -5,7 +5,7 @@ cd $script_dir/../..
 
 export CXX=clang++-3.8
 export CXXFLAGS=-stdlib=libc++
-export LDFLAGS=-stdlib=libc++
+export LDFLAGS=-lc++
 
 # the benchmarks built with this would NOT be good with coverage
 ./scripts/build --install --enable-coverage
